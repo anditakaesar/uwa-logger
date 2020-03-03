@@ -1,0 +1,37 @@
+{
+  "name": "uwa-logger",
+  "version": "1.0.0",
+  "main": "build/index.js",
+  "repository": "https://github.com/anditakaesar/uwa-logger.git",
+  "author": "Andita Kaesar <andita.kaesar@xtremax.com>",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "npx nodemon --exec ./node_modules/.bin/babel-node ./src/index.js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "nodemon": "^2.0.2",
+    "sequelize-cli": "^5.5.1"
+  },
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^3.21.2",
+    "mariadb": "^2.2.0",
+    "moment": "^2.24.0",
+    "sequelize": "^5.21.5",
+    "winston": "^3.2.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  }
+}
