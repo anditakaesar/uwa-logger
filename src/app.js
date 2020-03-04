@@ -14,6 +14,7 @@ app.use(urlencoded({ extended: true }));
 // router
 app.use('/user', require('./authrouter').default);
 app.use('/log', require('./logrouter').default);
+app.use('/migration', require('./migrationrouter').default);
 
 app.use((err, req, res, next) => {
     if (err) {

@@ -6,7 +6,9 @@
   "author": "Andita Kaesar <andita.kaesar@xtremax.com>",
   "license": "MIT",
   "scripts": {
-    "start:dev": "npx nodemon --exec ./node_modules/.bin/babel-node ./src/index.js"
+    "start:dev": "npx nodemon --exec ./node_modules/.bin/babel-node ./src/index.js",
+    "start": "node ./build/index.js",
+    "build": "npx babel src -d build"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -27,6 +29,7 @@
     "mariadb": "^2.2.0",
     "moment": "^2.24.0",
     "sequelize": "^5.21.5",
+    "umzug": "^2.2.0",
     "winston": "^3.2.1"
   },
   "babel": {
