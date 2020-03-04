@@ -3,6 +3,7 @@ import { sequelize } from '../models/index';
 import { DataTypes } from 'sequelize';
 import { genError } from './utils';
 import logger from './logger';
+import moment from 'moment';
 
 const User = require('../models/user')(sequelize, DataTypes);
 const Userlog = require('../models/userlog')(sequelize, DataTypes);
@@ -11,6 +12,8 @@ const router = Router();
 
 router.post('/', getUserByApi, (req, res, next) => {
     process.nextTick(() => {
+        req.body.timestamp = moment(req.body.timestamp).valueOf();
+        
         Userlog.create({
             userid: req.user.id,
             logjson: req.body
