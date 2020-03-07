@@ -13,6 +13,7 @@ const router = Router();
 router.post('/', getUserByApi, (req, res, next) => {
     process.nextTick(() => {
         req.body.timestamp = moment(req.body.timestamp).valueOf();
+        req.body.ip = req.ip || req.headers["x-forwarded-for"];
         
         Userlog.create({
             userid: req.user.id,
@@ -63,14 +64,14 @@ function getUserByApi(req, res, next) {
         })
         .then(user => {
             if (!user) {
-                next(genError(`not found`, `cannot create log using apikey ${req.query.apikey}`, 404));
+                next(genError(`not found`, `api key: "${req.query.apikey}"`, 404));
             }
 
             req.user = user;
             next();
         })
         .catch(err => {
-            next(genError(`error post new log`, err.message, 500));
+            next(genError(`error`, err.message, 500));
         });
     });
 }
