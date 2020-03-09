@@ -22,7 +22,7 @@ router.post('/', getUserByApi, (req, res, next) => {
         .then(userlog => {
             res.status(201).json({
                 message: `new log created`,
-                body: userlog.dataValues
+                log: userlog.dataValues
             });
         })
         .catch(err => {
@@ -33,20 +33,30 @@ router.post('/', getUserByApi, (req, res, next) => {
 
 router.get('/', getUserByApi, (req, res, next) => {
     process.nextTick(() => {
-        Userlog.findAll({
+        let page = req.query.page ? parseInt(req.query.page) : 1;
+        let limit = req.query.limit ? parseInt(req.query.limit) : 5;
+        let calcoffset = (page - 1) * limit;
+        Userlog.findAndCountAll({
             where: {
                 userid: req.user.id
-            }
+            },
+            limit: [calcoffset, limit]
         })
-        .then(results => {
-            // console.log(results);
+        .then(result => {            
             let logs = [];
-            results.forEach(l => {
+            let rownum = calcoffset + 1;
+            result.rows.forEach(l => {
+                l.logjson.rownum = rownum;
                 logs.push(l.logjson);
+                rownum++;
             });
             res.status(200).json({
                 message: `success`,
-                logs: logs
+                logs: logs,
+                count: result.count,
+                page: page,
+                limit: limit,
+                totalpage: Math.ceil(result.count / limit)
             });
         })
         .catch(err => {
