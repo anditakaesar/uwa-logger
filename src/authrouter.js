@@ -62,4 +62,45 @@ router.post('/authorize', (req, res, next) => {
     });
 });
 
+router.post('/login', (req, res, next) => {
+    process.nextTick(() => {
+        User.findOne({
+            where: {
+                email: req.body.email
+            }
+        })
+        .then(user => {
+            if (!user) {
+                next(genError(generalMsg, `user not found "${req.body.email}"`, 401))
+            } else {
+                bcrypt.compare(req.body.password, user.password, (err, valid) => {
+                    if (err) next(genError(generalMsg, err.message, 401));
+                    
+                    if (!valid) {
+                        next(genError(generalMsg, `wrong password attempt ${req.body.username}`, 401))
+                    } else {
+                        let userx = {
+                            id: user.id,
+                            username: user.username,
+                            email: user.email,
+                            apikey: user.apikey
+                        }
+                        req.session.user = userx;
+                        res.redirect(`/log/live`);
+                    }
+                });
+            }
+        })
+        .catch(err => next(genError(err.message, ``)));
+    });
+});
+
+export function checkSession (req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
 export default router;
