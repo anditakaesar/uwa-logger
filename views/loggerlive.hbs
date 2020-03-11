@@ -1,0 +1,42 @@
+{{> navbar}}
+<div id="apikey" hidden>{{data.user.apikey}}</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col card m-2">
+            <div class="form-group row m-2">
+                <label for="inputApikey" class="col-sm-2 col-form-label">Apikey</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputApikey" value="{{data.user.apikey}}" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col card m-2">
+            <div id="logcontainer" class="card-body">
+            {{#each data.logs}}
+                <div class="row m-2">
+                {{message}}
+                </div>
+            {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var api_address = window.location.origin;
+    var socket = io.connect(api_address);
+    var apikey = $('#apikey').text();
+    var event_log = 'log_' + apikey;
+
+    socket.on(event_log, function (logjson) {
+        appendLog(JSON.stringify(logjson, null, 2));
+    });
+
+    function appendLog(msg) {
+        var el = '<div class="row m-2">'+msg+'</div>';
+        $('#logcontainer').prepend(el);
+    }
+
+</script>

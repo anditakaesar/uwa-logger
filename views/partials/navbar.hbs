@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
+    <a class="navbar-brand" href="/">Uwa - Logger</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenus" aria-controls="mainMenus" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainMenus">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/live">Live logger</a>
+            </li>
+        </ul>
+
+        <div class="navbar-nav my-2 my-lg-0">
+            {{#unless data.user}}
+                <a class="btn btn-outline-primary my-2 my-sm-0" href="/login">Login</a>
+            {{/unless}}
+            {{#if data.user}}
+                <a class="nav-item nav-link" href="/admin/profile">| {{data.user.username}} |</a>
+                <a class="btn btn-outline-danger my-2 my-sm-0" href="/logout">Logout</a>
+            {{/if}}
+        </div>
+    </div>
+</nav>
