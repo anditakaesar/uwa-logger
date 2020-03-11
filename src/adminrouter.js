@@ -16,7 +16,10 @@ function getLogs (req, res, next) {
             where: {
                 userid: res.data.user.id
             },
-            limit: [calcoffset, limit]
+            limit: [calcoffset, limit],
+            order: [
+                ['createdAt', 'DESC']
+            ]
         })
         .then(result => {            
             let logs = [];
