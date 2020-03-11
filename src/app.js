@@ -9,6 +9,7 @@ import path from 'path';
 import { Server } from 'http';
 import { env } from './env';
 import { getCurrentUser, checkSession } from './authrouter';
+import cors from 'cors';
 
 const app = express();
 const http = Server(app);
@@ -33,6 +34,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: env.SESSION_COOKIE_AGE * 1000, secure: env.SESSION_COOKIE_SECURE }
 }));
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../static')));
 
