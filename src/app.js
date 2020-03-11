@@ -8,6 +8,7 @@ import session from 'express-session';
 import path from 'path';
 import { checkSession } from './authrouter';
 import { Server } from 'http';
+import { env } from './env';
 
 const app = express();
 const http = Server(app);
@@ -25,11 +26,11 @@ app.use(compression());
 app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(session({
-    name: 'this.sess',
-    secret: 'a-really-strong-secret',
+    name: env.SESSION_NAME,
+    secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 86400 * 1000, secure: false }
+    cookie: { maxAge: env.SESSION_COOKIE_AGE * 1000, secure: env.SESSION_COOKIE_SECURE }
 }));
 
 app.use(express.static(path.join(__dirname, '../static')));
@@ -81,6 +82,4 @@ app.use((req, res, next) => {
     });
 });
 
-// export { http as httpServer };
-// export default app;
 export default http;
