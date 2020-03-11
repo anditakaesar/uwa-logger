@@ -8,25 +8,6 @@ const User = require('../models/user')(sequelize, DataTypes);
 const router = Router();
 const generalMsg = `Login failed, please check your username and password`;
 
-// router.get('/', (req, res, next) => {
-//     process.nextTick(() => {
-//         User.findAll()
-//         .then(users => {
-//             let us = [];
-
-//             users.every(user => {
-//                 us.push({ id: user.id, username: user.username, email: user.email, password: user.password, apikey: user.apikey });
-//             })
-
-//             res.status(200).json({
-//                 message: `getting all users`,
-//                 users: us
-//             });
-//         })
-//         .catch(err => console.error(err));
-//     });
-// });
-
 router.post('/authorize', (req, res, next) => {
     process.nextTick(() => {
         User.findOne({
@@ -63,6 +44,7 @@ router.post('/authorize', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+
     process.nextTick(() => {
         User.findOne({
             where: {
@@ -79,27 +61,28 @@ router.post('/login', (req, res, next) => {
                     if (!valid) {
                         next(genError(generalMsg, `wrong password attempt ${req.body.username}`, 401))
                     } else {
-                        let userx = {
+                        req.session.user = {
                             id: user.id,
                             username: user.username,
                             email: user.email,
                             apikey: user.apikey
                         }
-                        req.session.user = userx;
-                        res.redirect(`/log/live`);
+
+                        res.redirect('/');
                     }
                 });
             }
         })
         .catch(err => next(genError(err.message, ``)));
     });
+
 });
 
 export function checkSession (req, res, next) {
-    if (req.session.user) {
+    if (req.session.user || req.user) {
         next();
     } else {
-        res.redirect('/login');
+        res.redirect(`/login`);
     }
 }
 

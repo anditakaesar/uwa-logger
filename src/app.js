@@ -6,9 +6,9 @@ import logger from './logger';
 import exphbs from 'express-handlebars';
 import session from 'express-session';
 import path from 'path';
-import { checkSession } from './authrouter';
 import { Server } from 'http';
 import { env } from './env';
+import { getCurrentUser, checkSession } from './authrouter';
 
 const app = express();
 const http = Server(app);
@@ -21,6 +21,7 @@ const hbs = exphbs.create({
     partialsDir: path.join(__dirname, '../views/partials')
 });
 
+// middlewares
 app.use(helmet());
 app.use(compression());
 app.use(json());
@@ -39,7 +40,12 @@ app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'hbs');
 app.engine('hbs', hbs.engine);
 
+// common data: res.data
 app.use((req, res, next) => {
+    if (req.session.user) {
+        res.data = {};
+        res.data.user = req.session.user;
+    }
     req.io = io;
     next();
 });
@@ -49,8 +55,8 @@ app.get('/', (req, res, next) => {
 });
 
 app.get('/login', (req, res, next) => {
-    if (req.session.user) {
-        res.redirect('/log/live');
+    if (req.user) {
+        res.redirect('/');
     } else {
         res.render('login', { title: 'Please Login', data: res.data });
     }
@@ -58,14 +64,18 @@ app.get('/login', (req, res, next) => {
 
 app.get('/logout', (req, res, next) => {
     req.session.destroy();
+    res.data.user = null;
+
     res.render('login', { title: 'Please Login', data: res.data });
 });
 
 // router
-app.use('/user', require('./authrouter').default);
-app.use('/log', require('./logrouter').default);
-app.use('/migration', require('./migrationrouter').default);
+app.use('/user', require('./authrouter').default); // to authenticate / login
+app.use('/log', require('./logrouter').default); // to post a log
+app.use('/migration', require('./migrationrouter').default); // to migrate
+app.use('/admin', checkSession, require('./adminrouter').default); // admin pages
 
+// error handler
 app.use((err, req, res, next) => {
     if (err) {
         logger.error(err.message, { intmsg: err.intmsg });
@@ -76,6 +86,7 @@ app.use((err, req, res, next) => {
     }
 });
 
+// not found handler
 app.use((req, res, next) => {
     res.status(404).json({
         message: `resource not found`

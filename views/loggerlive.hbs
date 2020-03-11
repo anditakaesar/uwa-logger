@@ -1,9 +1,13 @@
-<div id="apikey" hidden>{{data.apikey}}</div>
+{{> navbar}}
+<div id="apikey" hidden>{{data.user.apikey}}</div>
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mt-2">
         <div class="col card m-2">
-            <div class="card-body">
-                {{data.username}}
+            <div class="form-group row m-2">
+                <label for="inputApikey" class="col-sm-2 col-form-label">Apikey</label>
+                <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputApikey" value="{{data.user.apikey}}" disabled>
+                </div>
             </div>
         </div>
     </div>
@@ -34,6 +38,5 @@
         var el = '<div class="row m-2">'+msg+'</div>';
         $('#logcontainer').prepend(el);
     }
-
 
 </script>
