@@ -64,8 +64,9 @@ app.get('/login', (req, res, next) => {
 
 app.get('/logout', (req, res, next) => {
     req.session.destroy();
-    res.data.user = null;
-
+    if (res.data && res.data.user) {
+        res.data.user = null;
+    }
     res.render('login', { title: 'Please Login', data: res.data });
 });
 
