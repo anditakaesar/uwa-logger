@@ -4,7 +4,8 @@
     "password": null,
     "database": "uwa_logger",
     "host": "127.0.0.1",
-    "dialect": "mariadb",
+    "dialect": "sqlite",
+    "storage": "database.sqlite",
     "operatorsAliases": "0",
     "dialectOptions": {
       "timezone": "Etc/GMT+7"

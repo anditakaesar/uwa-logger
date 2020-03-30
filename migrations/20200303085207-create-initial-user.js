@@ -9,7 +9,9 @@ module.exports = {
       username: 'admin',
       email: 'admin@email.com',
       password: password,
-      apikey: 'this-is-api'
+      apikey: 'this-is-api',
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }]);
   },
 

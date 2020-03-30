@@ -20,7 +20,6 @@ router.post('/', getUserIdByApi, (req, res, next) => {
             logjson: req.body
         })
         .then(userlog => {
-            console.log(req.apikey);
             userlog.logjson.timestamp = moment(userlog.logjson.timestamp).toISOString();
             req.io.emit(`log_${req.apikey}`, userlog.logjson);
 
